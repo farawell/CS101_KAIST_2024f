@@ -56,7 +56,7 @@ To enable load_world() to work with relative paths (e.g., load_world(worlds/harv
    cp -r cs101_libraries_py35 worlds /path/to/your/site-packages/directory
    ```
 
-The -r option is used to recursively copy all files inside the directory.
+   The -r option is used to recursively copy all files inside the directory.
 
 ## You're all set!
 Enjoy working on your CS101 labs on your local Mac!
