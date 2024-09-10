@@ -3,7 +3,7 @@ This repository provides instructions for setting up your miniconda environment 
 
 ***I recommend using Miniconda rather than directly on your Mac. Running it without isolating the environment may lead to errors (It actually happened to me). To ensure smooth operation on your local machine, it’s essential to create and work within a dedicated conda environment. Additionally, after setting up all the necessary steps, in VSCode, ensure that you select the Python interpreter associated with the conda environment you've created. This will allow VSCode to execute your code using the correct environment and dependencies.***
 
-FYU, the official KAIST CS101 webpage is:
+FYI, the official KAIST CS101 webpage is:
 [https://cs101.kaist.ac.kr/](https://cs101.kaist.ac.kr/)
 
 ## Setting up Miniconda
