@@ -7,7 +7,7 @@ FYI, the official KAIST CS101 webpage is:
 [https://cs101.kaist.ac.kr/](https://cs101.kaist.ac.kr/)
 
 ## Setting up Miniconda
-Miniconda is sufficient for this setup; you won't need the full Anaconda package. Elice uses Python 3.6 (as verified by running `import sys; sys.version`), but since Miniconda does not support Python 3.6, we will use Python 3.8 (version 3.8.19). Follow these steps to configure your conda environment:
+Miniconda is sufficient for this setup; you won't need the full Anaconda(Which professor recommended.) package. Elice uses Python 3.6 (as verified by running `import sys; sys.version`), but since Miniconda does not support Python 3.6, we will use Python 3.8 (version 3.8.19). Follow these steps to configure your conda environment:
 
 1. Download Miniconda:  
    [https://docs.anaconda.com/miniconda/](https://docs.anaconda.com/miniconda/)
@@ -24,7 +24,7 @@ conda deactivate
 ```
 
 ## Setting up site-packages for your Python environment
-You must place 'cs101_libraries_py35' directory and 'worlds' directory insdie the site-package directory. To check the absolute path for the site-package directory, do the following:
+You must place 'cs101_libraries_py35' directory and 'worlds' directory inside the site-package directory. To check the absolute path for the site-package directory, do the following:
 
 1. Modify cs1robots.py
 To enable load_world() to work with relative paths (e.g., load_world(worlds/harvest1.wld)), follow these steps:
