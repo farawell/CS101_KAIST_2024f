@@ -1,5 +1,5 @@
 # CS101_lab_KAIST
-This page illustrates how to do your labs on your local machine, not using Alice. Some CS101 lab may need to be tested on the Alice webpage, but still, you can work without internet anytime you want if you do so. I'm working on M1 mac(FYU, it's M1 pro chip with 16GB of RAM). So at least if you're using M-series chip-based Mac, everything will work fine. If you have any problem, email me (farawell777@kaist.ac.kr).
+This page illustrates how to do your labs on your local machine, not using Alice. Some CS101 lab may need to be tested on the Alice webpage, but still, you can work without internet anytime you want if you do so. I'm working on M1 mac(FYU, it's M1 pro chip with 16GB of RAM). So at least if you're using M-series chip-based Mac, everything will work fine. If you have any problem, email me (farawell777 at kaist.ac.kr).
 
 ## Configuring miniconda
 First of all, miniconda is sufficient. You won't need anaconda.
