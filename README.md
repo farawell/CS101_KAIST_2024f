@@ -3,8 +3,6 @@ This repository provides instructions for setting up your miniconda environment 
 
 ***I recommend using Miniconda rather than directly on your Mac. Running it without isolating the environment may lead to errors (It actually happened to me). To ensure smooth operation on your local machine, it’s essential to create and work within a dedicated conda environment. Additionally, after setting up all the necessary steps, in VSCode, ensure that you select the Python interpreter associated with the conda environment you've created. This will allow VSCode to execute your code using the correct environment and dependencies.***
 
-___
-
 ## Setting up Miniconda
 Miniconda is sufficient for this setup; you won't need the full Anaconda package. Elice uses Python 3.6 (as verified by running `import sys; sys.version`), but since Miniconda does not support Python 3.6, we will use Python 3.8 (version 3.8.19). Follow these steps to configure your conda environment:
 
@@ -50,7 +48,7 @@ To enable load_world() to work with relative paths (e.g., load_world(worlds/harv
    import sys
    print(sys.path)
    ```
-Look for a directory that contains the string 'site-packages'. This is your target directory.
+   Look for a directory that contains the string 'site-packages'. This is your target directory.
 
 4. Place the cs101_libraries_py35 and worlds directories in the site-packages directory you identified earlier. For example:
    ```bash
