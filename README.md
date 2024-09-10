@@ -27,12 +27,12 @@ You must place 'cs101_libraries_py35' directory and 'worlds' directory insdie th
 1. Modify cs1robots.py
 To enable load_world() to work with relative paths (e.g., load_world(worlds/harvest1.wld)), follow these steps:
 
-First, add the following import at the beginning of the file, where other imports are listed:
+* Add the following import at the beginning of the file, where other imports are listed:
 ```python
 import os
 ```
 
-Modify the load_world() function. Right before the line txt = open(filename, 'r').read(), add:
+* Modify the load_world() function. Right before the line txt = open(filename, 'r').read(), add:
 ```python
 if not os.path.isabs(filename):
         filename = os.path.join('/path/to/your/site-packages/directory', filename)
