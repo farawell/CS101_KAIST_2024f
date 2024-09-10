@@ -16,6 +16,7 @@ Miniconda is sufficient for this setup; you won't need the full Anaconda package
    conda create --name cs101 python=3.8
    conda activate cs101
    conda install pillow
+   ```
 To deactivate the environment, use:
 ```bash
 conda deactivate
@@ -28,35 +29,34 @@ You must place 'cs101_libraries_py35' directory and 'worlds' directory insdie th
 To enable load_world() to work with relative paths (e.g., load_world(worlds/harvest1.wld)), follow these steps:
 
 * Add the following import at the beginning of the file, where other imports are listed:
-```python
-import os
-```
+   ```python
+   import os
+   ```
 
 * Modify the load_world() function. Right before the line txt = open(filename, 'r').read(), add:
-```python
-if not os.path.isabs(filename):
-        filename = os.path.join('/path/to/your/site-packages/directory', filename)
-```
+   ```python
+   if not os.path.isabs(filename):
+           filename = os.path.join('/path/to/your/site-packages/directory', filename)
+   ```
 
 2. Activate your conda environment and start Python:
-  ```bash
-  conda activate cs101
-  python3
-  ```
+   ```bash
+   conda activate cs101
+   python3
+   ```
 
 3. Print and check the Python path:
-```python
-import sys
-print(sys.path)
-```
+   ```python
+   import sys
+   print(sys.path)
+   ```
 Look for a directory that contains the string 'site-packages'. This is your target directory.
 
 4. Place the cs101_libraries_py35 and worlds directories in the site-packages directory you identified earlier. For example:
-
-```bash
-cd /path/to/the/two/directories/we/will/move/
-cp -r cs101_libraries_py35 worlds /path/to/your/site-packages/directory
-```
+   ```bash
+   cd /path/to/the/two/directories/we/will/move/
+   cp -r cs101_libraries_py35 worlds /path/to/your/site-packages/directory
+   ```
 
 The -r option is used to recursively copy all files inside the directory.
 
