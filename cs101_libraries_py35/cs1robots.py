@@ -290,7 +290,7 @@ def load_world(filename=None):
         if not filename:
             raise RuntimeError("No world file selected.")
     txt = open(filename, 'r').read()
-    # txt = _re.sub('\r\n', '\n', txt)  # Windows
+    txt = _re.sub('\r\n', '\n', txt)  # Windows
     txt = _re.sub('\r', '\n', txt)  # Mac
     _check_world(txt)
     wd = {}
@@ -345,8 +345,8 @@ def edit_world():
             row = int((_world.bottom - y + _world.ts / 2) / _world.ts)
             if (col % 2) == 1 and (row % 2) == 1:
                 # corner
-                av = (col + 1) / 2
-                st = (row + 1) / 2
+                av = (col + 1) // 2
+                st = (row + 1) // 2
                 if av < 1 or av > _world.av or st < 1 or st > _world.st:
                     continue
                 if e.getButton() == 1:

@@ -12,6 +12,11 @@ Modified by Jungkook Park for KAIST CS101. (24 Nov 2015)
 - FIx ImportError for _tempfile.
 - Add function saveToIO.
 - Make periodic function call. 
+
+Modified by Jungkook Park for KAIST CS101. (10 Sep 2018)
+- Give a tick to Tkinter after _RenderedCanvas.update() is called
+  to fix the issue that successive .update() calls miss some updated properties.
+
 """
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -83,7 +88,7 @@ _DEBUG = {
 
 _dashMultiplier = 2          # oddity about whether pattern should be (a,b) or (a,b,a,b)
 
-_elice_use = False
+_elice_use = True
 
 import copy as _copy
 import math as _math
@@ -1473,7 +1478,7 @@ class _GraphicsManager:
             self._commandQueue.put(command)
 
     def _closeAll(self):
-        for canvas in self._openCanvases:
+        for canvas in self._openCanvases[:]:
             canvas.close()
 
     def processCommands(self):
@@ -3686,6 +3691,12 @@ class _RenderedCanvas(object):
                 self._tkWin.withdraw()
             else:
                 self._tkWin.deiconify()
+    
+        # wait until <Configure> event is propagated
+        _graphicsManager.processCommands()
+        _graphicsManager.processEvents()
+        _tkroot.update()
+        _time.sleep(.01)
 
     def saveToFile(self, filename, bgcolor):
         # add rectangle to simulate background color
