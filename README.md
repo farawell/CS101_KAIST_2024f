@@ -1,4 +1,4 @@
-# CS101 Lab (KAIST, Fall 2024)
+# CS101 (KAIST, Fall 2024)
 This repository provides instructions for setting up your miniconda environment to complete CS101 labs on your local machine, without relying on Elice. While some codes may need to be tested on the Elice platform, this setup allows you to work offline. These instructions are optimized for Mac users with M-series chips (e.g., M1, M1 Pro, M4, etc). If you encounter any issues, feel free to email me at *farawell777 at kaist.ac.kr*.
 
 ***I recommend using Miniconda rather than directly on your Mac. Running it without isolating the environment may lead to errors (It actually happened to me). To ensure smooth operation on your local machine, it’s essential to create and work within a dedicated conda environment. Additionally, after setting up all the necessary steps, in VSCode, ensure that you select the Python interpreter associated with the conda environment you've created. This will allow VSCode to execute your code using the correct environment and dependencies.***
