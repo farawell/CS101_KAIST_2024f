@@ -1,5 +1,3 @@
-import time
-import random
 from cs1graphics import *
 from hidden import get_piece_image, create_boards, create_yut_sticks, throw_yut_sticks, add_turn_text, add_throw_button_and_wait, clear_yut_stick_board
 
@@ -7,11 +5,12 @@ from hidden import get_piece_image, create_boards, create_yut_sticks, throw_yut_
 class Piece:
     def __init__(self, piece_id, start_index):
         """
-        Task 1.1.
+        Task 2.1.
             Initialize the following attributes of `Piece` class.
                 piece_id (int)
                 start_index (int)
                 current_index (int)
+                piggyback (bool)
         
         Input
             piece_id (int): id of the piece
@@ -20,25 +19,21 @@ class Piece:
             None
         """
         ##### Implement Here #####
+        # From my code of Task 1
         if start_index not in range(-4, 0):
             raise ValueError("start_index should be among -1, -2, -3 and -4")
-        
         if not isinstance(piece_id, int) or not isinstance(start_index, int):
             raise ValueError("Both piece_id and start_index should be integer")
 
         self.piece_id = piece_id
         self.start_index = start_index
         self.current_index = start_index
+        self.piggyback = False
         ##########################
-        
+
     def get_point_by_current_index(self):
         """
-        Task 1.2.
-            Return the x and y coordinates where the piece should be located in the canvas.
-            Refer to the figures that describe the correnpondence between indices and points.
-        
-        Output
-            x, y (tuple of int): x and y coordinates where the piece should be located in the canvas
+        Copy your previous code from Task 1.2.
         """
         ##### Implement Here #####
         idx = self.current_index
@@ -61,16 +56,10 @@ class Piece:
             print("[get_point_by_current_index()]: Wrong current_index\n")
             return -1
         ##########################
-        
+
     def set_current_index(self, steps_to_move):
         """
-        Task 1.3.
-            Change the attribute `current_index` based on the movement rules.
-        
-        Input
-            steps_to_move (int): number of steps to move by Yut sticks in this turn
-        Output
-            None
+        Copy your previous code from Task 1.3.
         """
         ##### Implement Here #####
         if steps_to_move <= 0 or not isinstance(steps_to_move, int): return
@@ -102,22 +91,31 @@ class Piece:
 
 
 class Player:
-    def __init__(self, player_id, start_index):
+    def __init__(self, player_id):
         self.player_id = player_id
-        self.piece = Piece(piece_id=0, start_index=start_index)
+        self.pieces = [
+            Piece(piece_id=0, start_index=-2*player_id-1),
+            Piece(piece_id=1, start_index=-2*player_id-2)
+        ]
     
-    def move_piece_by_yut_sticks(self, yut_sticks):
+    def move_piece_by_yut_sticks(self, piece_id, yut_sticks):
         """
-        Task 1.4.
+        Task 2.2.
             (1) Calculate the number of steps to move using `yut_sticks`.
-            (2) Move the player's piece by the number of steps.
+            (2) Update a piece of the player corresponding to `piece_id` using `set_current_index`.
+            (3) If the two pieces of the player land at the same point, set their 'piggyback' attributes to `True`.
         
         Input:
+            piece_id (int): id of the piece to be moved
             yut_sticks (list of str): list of 4 strings each of which is either "marked" or "unmarked".
         Output:
             None
         """
         ##### Implement Here #####
+        if piece_id not in [0, 1]:
+            raise ValueError('piece_id should be either 0 or 1')
+
+        # Part of the codes are from my previous code for Task 1
         yut_move_dict = {
             3: 1, # Do
             2: 2, # Gae
@@ -127,12 +125,17 @@ class Player:
         }
         marked_side_num = yut_sticks.count("marked")
         steps_to_move = yut_move_dict[marked_side_num]
-        self.piece.set_current_index(steps_to_move)
-        ##########################
+        self.pieces[piece_id].set_current_index(steps_to_move) 
 
+        if (self.pieces[0].current_index == self.pieces[1].current_index) \
+            or (self.pieces[0].current_index in [23, 28] and self.pieces[1].current_index in [23, 28]):
+            self.pieces[0].piggyback = True
+            self.pieces[1].piggyback = True
+        ##########################
+    
     def is_winner(self):
         """
-        Task 1.5.
+        Task 2.3.
             Determine whether the player is currently the winner.
             A player is the winner if every piece of the player currently completes a full round on the Yut board.
         
@@ -140,8 +143,43 @@ class Player:
             is_player_winner (bool): whether the player is the current winner
         """
         ##### Implement Here #####
-        return self.piece.current_index == 0
+        return all([self.pieces[0].current_index == 0, self.pieces[1].current_index == 0])
         ##########################
+
+
+def capture_and_get_next_players(current_player, current_opponent):
+    """
+    Task 2.4.
+        (1) If one of the current player's pieces captures the opponent's pieces,
+            update the captured pieces' attributes to set their `piggyback` attributes to `False`,
+            and return them to their starting position.
+        (2) This function should return a tuple of two Player objects:
+            the next player and their opponent for the upcoming turn.
+            If any pieces were captured, the turn remains the same.
+    
+    Input 
+        current_player (Player): current player's object
+        opponent_player (Player): the other player's object
+    
+    Output
+        next_player, next_opponent (tuple of Player): the next player and its opponent player for the next iteration
+    """
+    ##### Implement Here #####
+    captured = False
+    
+    # Check for all occurence of capture excluding the case for the index 0
+    for piece in current_player.pieces:
+        for opp_piece in current_opponent.pieces:
+            on_same_loc = any([piece.current_index in [23, 28] and opp_piece.current_index in [23, 28], \
+                               piece.current_index == opp_piece.current_index])
+            if on_same_loc and opp_piece.current_index != 0:
+                opp_piece.piggyback = False
+                opp_piece.current_index = opp_piece.start_index
+                captured = True
+
+    if captured: return current_player, current_opponent
+    else: return current_opponent, current_player
+    ##########################
 
 
 def create_piece_images(canvas):
@@ -153,12 +191,15 @@ def create_piece_images(canvas):
 def update_piece_images(piece_images, players):
     piece_images.clear()
     for player in players:
-        if getattr(player.piece, "current_index", 0) == 0:
-            continue
-        piece_image = get_piece_image(player.player_id)
-        x, y = player.piece.get_point_by_current_index()
-        piece_image.moveTo(x, y)
-        piece_images.add(piece_image)
+        for piece in player.pieces:
+            if getattr(piece, "current_index", 0) == 0:
+                continue
+            if not isinstance(getattr(piece, "piggyback", None), bool):
+                continue
+            piece_image = get_piece_image(player.player_id, piece.piggyback)
+            x, y = piece.get_point_by_current_index()
+            piece_image.moveTo(x, y)
+            piece_images.add(piece_image)
 
 
 def print_winner(player, yut_stick_board):
@@ -166,7 +207,7 @@ def print_winner(player, yut_stick_board):
     winner_text.setFontColor("white")
     winner_text.moveTo(0, -50)
     yut_stick_board.add(winner_text)
-    
+
 
 def expected_results():
     """ You can modify this function. """
@@ -174,35 +215,48 @@ def expected_results():
         if hasattr(obj, attr):
             print(f"{attr}: {getattr(obj, attr)}")
             
-    print("### Task 1.1 ###")
+    print("### Task 2.1 ###")
     piece = Piece(piece_id=0, start_index=-1)
     print_attr(piece, "piece_id")
     print_attr(piece, "start_index")
     print_attr(piece, "current_index")
+    print_attr(piece, "piggyback")
     
-    print("\n### Task 1.2 ###")
-    piece.current_index = 15
-    x, y = piece.get_point_by_current_index()
-    print(f"Coordinates of the piece: {(x, y)}")
-    
-    print("\n### Task 1.3 ###")
-    piece.set_current_index(steps_to_move=5)
-    print_attr(piece, "current_index")
-    
-    print("\n### Task 1.4 ###")
-    player = Player(player_id=0, start_index=-1)
+    print("\n### Task 2.2 ###")
+    player = Player(player_id=0)
+    player.pieces[0].current_index = -1
+    player.pieces[1].current_index = 2
     gae = ["marked", "unmarked", "marked", "unmarked"]
-    player.move_piece_by_yut_sticks(yut_sticks=gae)
-    print_attr(player.piece, "current_index")
+    player.move_piece_by_yut_sticks(piece_id=0, yut_sticks=gae)
+    print_attr(player.pieces[0], "current_index")
+    print_attr(player.pieces[0], "piggyback")
+    print_attr(player.pieces[1], "piggyback")
     
-    print("\n### Task 1.5 ###")
-    player.piece.current_index = 20
+    print("\n### Task 2.3 ###")
+    player = Player(player_id=0)
+    player.pieces[0].current_index = 0
+    player.pieces[1].current_index = 20
     is_winner = player.is_winner()
     print(f"Is Player {player.player_id} the winner?: {is_winner}")
     do = ["marked", "unmarked", "marked", "marked"]
-    player.move_piece_by_yut_sticks(yut_sticks=do)
+    player.move_piece_by_yut_sticks(piece_id=1, yut_sticks=do)
     is_winner = player.is_winner()
     print(f"Is Player {player.player_id} the winner?: {is_winner}")
+    
+    print("\n### Task 2.4 ###")
+    player = Player(player_id=0)
+    opponent = Player(player_id=1)
+    player.pieces[0].current_index = 0
+    player.pieces[1].current_index = 2
+    opponent.pieces[0].current_index = 0
+    opponent.pieces[1].current_index = 4
+    
+    gae = ["marked", "unmarked", "marked", "unmarked"]
+    player.move_piece_by_yut_sticks(piece_id=1, yut_sticks=gae)
+    next_player, next_opponent = capture_and_get_next_players(player, opponent)
+    print(f"Captured piece goes to index {opponent.pieces[1].current_index}.")
+    print(f"Next player is Player {next_player.player_id}.")
+    print(f"Next opponent is Player {next_opponent.player_id}.")
     
 
 def play():
@@ -211,10 +265,9 @@ def play():
     yut_stick_board = create_boards(canvas)
     yut_sticks = create_yut_sticks(yut_stick_board)
     
-    start_index = random.randint(-4, -1)
-    player = Player(player_id=0, start_index=start_index)
+    player, opponent = Player(player_id=0), Player(player_id=1)
     piece_images = create_piece_images(canvas)
-    update_piece_images(piece_images, [player])
+    update_piece_images(piece_images, [player, opponent])
     
     while True:
         turn_text = add_turn_text(player, yut_stick_board)
@@ -228,22 +281,24 @@ def play():
             if 470 < click.getX() < 530 and 150 < click.getY() < 180:
                 throw_yut_sticks(yut_sticks)
                 continue
-            if getattr(player.piece, "current_index", 0) == 0:
-                continue
-            if not isinstance(getattr(player.piece, "piece_id", None), int):
-                continue
-            x, y = player.piece.get_point_by_current_index()
-            if click.distance(Point(x, y)) < 15:
-                player.move_piece_by_yut_sticks([stick.face for stick in yut_sticks])
-                moved = True
+            for piece in player.pieces:
+                if getattr(piece, "current_index", 0) == 0:
+                    continue
+                if not isinstance(getattr(piece, "piece_id", None), int):
+                    continue
+                x, y = piece.get_point_by_current_index()
+                if click.distance(Point(x, y)) < 15:
+                    player.move_piece_by_yut_sticks(piece.piece_id, [stick.face for stick in yut_sticks])
+                    moved = True
                 
         if player.is_winner():
             break
         
-        update_piece_images(piece_images, [player])
+        player, opponent = capture_and_get_next_players(player, opponent)
+        update_piece_images(piece_images, [player, opponent])
         clear_yut_stick_board(yut_stick_board, turn_text, throw_button)
     
-    update_piece_images(piece_images, [player])
+    update_piece_images(piece_images, [player, opponent])
     clear_yut_stick_board(yut_stick_board, turn_text, throw_button)
     print_winner(player, yut_stick_board)
 
